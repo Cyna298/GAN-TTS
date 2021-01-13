@@ -8,15 +8,12 @@ from models.generator import Generator
 from utils.util import mu_law_encode, mu_law_decode
 
 def attempt_to_restore(generate, checkpoint_dir, use_cuda):
-    checkpoint_list = os.path.join(checkpoint_dir, 'checkpoint')
+  
+  checkpoint_path = checkpoint_dir
+  print("Restore from {}".format(checkpoint_path))
+  checkpoint = load_checkpoint(checkpoint_path, use_cuda)
+  generate.load_state_dict(checkpoint["generator"])
 
-    if os.path.exists(checkpoint_list):
-        checkpoint_filename = open(checkpoint_list).readline().strip()
-        checkpoint_path = os.path.join(
-            checkpoint_dir, "{}".format(checkpoint_filename))
-        print("Restore from {}".format(checkpoint_path))
-        checkpoint = load_checkpoint(checkpoint_path, use_cuda)
-        generate.load_state_dict(checkpoint["generator"])
 
 def load_checkpoint(checkpoint_path, use_cuda):
     if use_cuda:
